@@ -1,13 +1,14 @@
 import numpy as np
 
 class FixedRBFLayer:
-    def __init__(self, 
-                 X_train, 
+    def __init__(self,  
                  units, 
                  dist_type, 
                  seed):
-        self.X_train = X_train
         self.units = units
+
+    def initialize(self, X_train):
+        self.X_train = X_train
 
         # choose centers and sigmas randomly
         n = X_train.shape[0]
@@ -33,17 +34,15 @@ class FixedRBFLayer:
             else:
                 raise Exception(f"{dist_type} is not a valid distance type. Choose max or avg.")
 
-    # runtime: O(len(x_in)^2) unless x has ridiculous dims look for ways to vectorize
-    def feed_forward(self):
+    def feed_forward(self, x_in):
         h = np.array([])
-        for x_in in self.X_train:
-            for c_j in self.centers:
-                d_j = 0
-                for x_i in x_in:
-                    d_j += ((x_i - c_j) ** 2)
-                d_j = np.sqrt(d_j)            
-                h_j = np.exp(-(d_j**2)/(2 * (self.sigma ** 2)))
-                h.append(h_j)
+        for c_j in self.centers:
+            d_j = 0
+            for x_i in x_in:
+                d_j += ((x_i - c_j) ** 2)
+            d_j = np.sqrt(d_j)            
+            h_j = np.exp(-(d_j**2)/(2 * (self.sigma ** 2)))
+            h.append(h_j)
         return h_j
 
 class OutputLayer:
@@ -72,9 +71,27 @@ class OutputLayer:
 class RBFModel:
     def __init__(self, layer_arr):
         self.layers = np.array(layer_arr)
-        
-        rbfLayerUnits = self.layers[0].units
-        self.layers[-1].initialize(rbfLayerUnits, np.random.randint(low=0))
 
+        if self.layers.shape[0] != 2:
+            raise Exception("Wrong number of layers, check layer array")
+        if type(self.layers[0]) != FixedRBFLayer:
+            raise Exception("Wrong layer type at position 0, please use FixedRBFLayer")
+        if type(self.layers[1]) != OutputLayer:
+            raise Exception("Wrong layer type at position 1, please use OutputLayer")
+    
+    def initialize(self, X_train, Y_train):
+        self.X_train = X_train
+        self.Y_train = Y_train
+
+        # initialize RBF layer
+        self.layers[0].initialize(X_train)
+
+        # initialize output layer
+        rbfUnits = self.layers[0].units
+        self.layers[1].initialize(prev_layer_units=rbfUnits, seed=np.random.default_rng().integers(0))
+    
     def forward_propagate(self):
-        hiddenLayerResults = FixedRBFLayer.feed_forward()
+        # forward prop RBF layer
+        
+
+        # forward prop output layer
