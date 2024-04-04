@@ -9,10 +9,6 @@ class FixedRBFLayer:
         self.dist_type = dist_type
         self.seed = seed
 
-    # input shape: (n, 1)
-    # x = [[],
-    #      [],
-    #      []]
     def initialize(self, X_train):
         self.X_train = X_train
 
