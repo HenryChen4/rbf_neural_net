@@ -7,5 +7,7 @@ Sample output:
 Usage:
 <br>
 model = RBFModel([FixedRBFLayer(units, "sigma selection type", seed for sigma and center selection), Layer(units)])
+<br>
 total_loss = model.fit(x_train, y_train, alpha, epochs)
+<br>
 predictions = model.predict(x_test)
