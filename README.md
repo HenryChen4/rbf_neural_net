@@ -1,11 +1,9 @@
-Radial basis function neural network
+Radial basis function neural network for function approximation
 
-Exploring function approximation and more eccentric techniques.
+Sample output:
+<img width="888" alt="Screenshot 2024-04-03 at 6 19 01 PM" src="https://github.com/HenryChen4/rbf_neural_net/assets/71111859/77a33c68-2788-4be3-ba38-b3df1c22845f">
 
-Anticipated usage:
-1. create the model:
-model = RBFModel([FixedRBFLayer(units=5, dist_type="max", seed=12345), (OutputLayer(units=1)])
-2. initialize the model
-model.initialize(X_train, Y_train)
-3. train, test, and get results of model
-results = model.fit(X_train, Y_train, alpha, epochs, seed)
+Usage:
+model = RBFModel([FixedRBFLayer(units, "sigma selection type", seed for sigma and center selection), Layer(units)])
+total_loss = model.fit(x_train, y_train, alpha, epochs)
+predictions = model.predict(x_test)
